@@ -6,6 +6,10 @@ const app = express().use(bodyParser.json());
 
 app.listen(process.env.PORT || 8000, () => console.log('webhook is listening'));
 
+app.get('/ping', (req, res) => {
+    res.send('Work!');
+});
+
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
     // Your verify token. Should be a random string.
