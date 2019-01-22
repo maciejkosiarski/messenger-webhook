@@ -1,6 +1,6 @@
 'use strict';
 
-const PAGE_ACCESS_TOKEN = 'EAATcnIiARngBAEaisRYKSLEQLMoQqGP957XBwjbkmeg9S1ZBJwPqOvId3NlsQKMUd45Pk4bKPLdZATIG1oIOZBJIQD54uvkNzjsDyDZCZAGHaLVUkULIsaHjIVZBD8YtFL7pEw9uZBkIjc3gUtNts3HwNhN838PgSs0IILKDpZAP6ogf7lAj2fMPvXqQfZAGa7AsZD';
+require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -13,12 +13,7 @@ app.get('/ping', (req, res) => {
     res.send('Work!');
 });
 
-// Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
-    // Your verify token. Should be a random string.
-    let VERIFY_TOKEN = 'AAD77370EA53760206FD9553A9E676B114F3ED37204F53A3C8110341B439B585';
-
-    // Parse the query params
     let mode = req.query['hub.mode'];
     let token = req.query['hub.verify_token'];
     let challenge = req.query['hub.challenge'];
@@ -27,7 +22,7 @@ app.get('/webhook', (req, res) => {
     if (mode && token) {
 
         // Checks the mode and token sent is correct
-        if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+        if (mode === 'subscribe' && token === process.env.VERIFY_TOKEN) {
 
             // Responds with the challenge token from the request
             console.log('WEBHOOK_VERIFIED');
@@ -109,7 +104,7 @@ function callSendAPI(sender_psid, response) {
     // Send the HTTP request to the Messenger Platform
     request({
         "uri": "https://graph.facebook.com/v2.6/me/messages",
-        "qs": { "access_token": PAGE_ACCESS_TOKEN },
+        "qs": {"access_token": process.env.PAGE_ACCESS_TOKEN,},
         "method": "POST",
         "json": request_body
     }, (err, res, body) => {
